@@ -9,11 +9,13 @@ BEGIN
 	DECLARE _mindayId int;
 	DECLARE _currDate Date;
 	DECLARE _EMAWeight real;
-	
-	SELECT _maxdayId = Max(dayId)
+
+	DELETE FROM RSI WHERE code = _code and days = _days and RSI is null;
+
+	SELECT Max(dayId) INTO _maxdayId
 	FROM RSI WHERE code = _code and days = _days;
 
-	SELECT _maxdayIdDayPrice = Max(dayId)
+	SELECT Max(dayId) INTO _maxdayIdDayPrice
 	FROM DayPrice WHERE code = _code;
 
 
@@ -21,7 +23,7 @@ BEGIN
 	IF _maxdayId is null THEN
 		SET  _mindayId = _days + 1 ;
 
-		SELECT _currDate = date FROM DayPrice WHERE code = _code AND dayId = _mindayId;
+		SELECT date into _currDate FROM DayPrice WHERE code = _code AND dayId = _mindayId;
 		#initial avg U and D
 		INSERT INTO RSI (code, date, dayId, days, AvgU, AvgD)
 		SELECT _code, 
@@ -43,7 +45,7 @@ BEGIN
 		AND dayId = _mindayId
 		AND Days = _days;
 
-		 SET _maxdayId = _mindayId;
+		SET _maxdayId = _mindayId;
 
 	END IF;
 
@@ -53,7 +55,7 @@ BEGIN
 	WHILE _maxdayId <  _maxdayIdDayPrice DO
 		SET _maxdayId = _maxdayId + 1;
 
-		SELECT _currDate = date FROM DayPrice WHERE code = _code AND dayId = _maxdayId;
+		SELECT date INTO _currDate FROM DayPrice WHERE code = _code AND dayId = _maxdayId;
 			
 		INSERT INTO RSI (code, date, dayId, days, AvgU, AvgD)
 		SELECT _code, 

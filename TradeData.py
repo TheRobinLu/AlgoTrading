@@ -65,6 +65,9 @@ class TradeData:
             tickers = self.get_tickers()
 
         for ticker in tickers:
+            if ticker in ['EAAI.NE','EARK.NE']:
+                self.get_hour([ticker])
+                continue
             #get last date
             tickerid = self.get_tickerid(ticker, "yahoocode")
             query = "SELECT Max(date) as lastdate, Max(dayid) as lastdayid FROM dayprice WHERE code = '" + tickerid + "'"
@@ -111,6 +114,60 @@ class TradeData:
 
         return
 
+    def get_hour(self, tickers):
+        runquery = self.db.cursor()
+        query = ''
+        if len(tickers) == 0:
+            tickers = self.get_tickers()
+
+        for ticker in tickers:
+            #get last date
+            tickerid = self.get_tickerid(ticker, "yahoocode")
+            query = "SELECT Max(date) as lastdate, Max(dayid) as lastdayid FROM dayprice WHERE code = '" + tickerid + "'"
+            runquery.execute(query)
+            data = runquery.fetchall()
+            if data[0][0]==None:
+                lastDate = dt.strptime("2019-01-05", "%Y-%m-%d")
+                lastdayid = 0
+                data = yf.download(ticker, interval="1h", start=lastDate, group_by="ticker")
+                #, start=lastDate
+
+            else:
+                lastDate = data[0][0]
+                lastdayid = data[0][1]
+                data = yf.download(ticker, start=lastDate)
+
+            if len(data) > 0:
+                self.cleanuplast(tickerid, lastdayid)
+
+            cnt = len(data)
+            i = lastdayid
+            for date, market in data.iterrows():
+                skip = 0
+                for value in market:
+                    if math.isnan(value):
+                        skip = 1
+                        break
+                if skip == 1:
+                    continue
+                query = "INSERT INTO dayprice (code, dayId, date, openprice, highprice, lowprice, closeprice, adjclose, volume) "\
+                        "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                #insert all
+                row = []
+                row.append(tickerid)
+                row.append(i)
+                a = str(date)
+                row.append(a)
+                row = row + market.to_list()
+                runquery.execute(query, tuple(row))
+                self.db.commit()
+                i = i+1
+                print("Importing ", tickerid, i, " of ", cnt)
+            # ema
+            # self.calculateIndicators(tickerid)
+
+        return
+
     def get_min(self, tickers, start, end):
         runquery = self.db.cursor()
         query = ''
@@ -122,7 +179,7 @@ class TradeData:
             tickers = self.get_tickers()
 
         str_tickers = ' '.join(tickers)
-        data = yf.download(str_tickers, interval="1m", start=start, end=end, group_by="ticker")
+        data = yf.download(str_tickers, interval="1m", start=start, group_by="ticker")
 
         for ticker in tickers:
             tickerid = self.get_tickerid(ticker, "yahoocode")
@@ -146,6 +203,53 @@ class TradeData:
                         continue
                     row = []
                     query = "INSERT INTO minprice (code, tradeTime, openprice, highprice, lowprice, closeprice, adjclose, volume) "\
+                        "VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
+                    row.append(tickerid)
+                    a = str(time)
+                    row.append(a)
+                    row = row + market.to_list()
+                    runquery.execute(query, tuple(row))
+
+                    print("Importing ", tickerid, " for ", a)
+                    self.db.commit()
+
+        return
+
+    def get_2min(self, tickers, start, end):
+        runquery = self.db.cursor()
+        query = ''
+
+        if start < dt.now() + relativedelta(days=-7):
+            start = dt.now() + relativedelta(days=-7)
+
+        if len(tickers) == 0:
+            tickers = self.get_tickers()
+
+        str_tickers = ' '.join(tickers)
+        data = yf.download(str_tickers, interval="2m", start=start,  group_by="ticker")
+
+        for ticker in tickers:
+            tickerid = self.get_tickerid(ticker, "yahoocode")
+            if len(data[ticker]) > 0:
+                #clean up min
+                #query = "DELETE FROM minprice WHERE code ='{0}' AND tradeTime between '{1}' and '{2}'"
+                #query = query.format(arg[0], arg[1], arg[2])
+                #runquery.execute(query)
+                query = "DELETE FROM min2price WHERE code =%s AND tradeTime between %s and %s"
+                arg = [tickerid, start.strftime("%Y-%m-%d %H:%M:%S"), end.strftime("%Y-%m-%d %H:%M:%S")]
+                runquery.execute(query, tuple(arg))
+                self.db.commit()
+
+                for time, market in data[ticker].iterrows():
+                    skip = 0
+                    for value in market:
+                        if math.isnan(value):
+                            skip = 1
+                            break
+                    if skip == 1:
+                        continue
+                    row = []
+                    query = "INSERT INTO min2price (code, tradeTime, openprice, highprice, lowprice, closeprice, adjclose, volume) "\
                         "VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
                     row.append(tickerid)
                     a = str(time)

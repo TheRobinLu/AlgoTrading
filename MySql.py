@@ -1,4 +1,5 @@
 import mysql.connector as conn
+from mysql.connector import Error
 
 
 class MySql:

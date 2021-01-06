@@ -25,18 +25,23 @@ def createIndicator():
 
     myTd.calculateIndicators('ARKK')
 
-def get_new():
-    myTd = td.TradeData()
-
-    myTd.get_new('')
 
 def get_new():
     myTd = td.TradeData()
     myTd.get_new('')
+
+def get_hour():
+    myTd = td.TradeData()
+    tickers = ['EARK.NE', 'EAAI.NE']
+    myTd.get_hour(tickers)
 
 def get_min():
     myTd = td.TradeData()
-    myTd.get_min('', dt.now() + relativedelta(days=-7), dt.now())
+    myTd.get_min(['WCP.TO', 'WELL.TO', 'WPRT', 'WPRT.TO','XQQ.TO','XSP.TO'], dt.now() + relativedelta(days=-2), dt.now())
+
+def get_2min():
+    myTd = td.TradeData()
+    myTd.get_2min(['WCP.TO', 'WELL.TO', 'WPRT', 'WPRT.TO','XQQ.TO','XSP.TO'], dt.now() + relativedelta(days=-2), dt.now())
 
 def get_realtime():
     myTd = td.TradeData()
@@ -52,7 +57,9 @@ def monitor():
 #download_all()
 #createIndicator()
 #get_new()
-get_min()
+#get_hour()
+# get_min()
+get_2min()
 #get_realtime()
 
 #monitor()

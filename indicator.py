@@ -10,50 +10,38 @@ class Indicator:
         self.mysql = sql.MySql()
         self.db = self.mysql.dbconn()
 
-    def ema(self):
-        tickers = self.mysql.get_tickers_id()
+    def ema(self, tickers=[], emadays=[3, 5, 7, 10, 12, 14, 15, 16, 20, 25, 26, 30, 40, 50, 70, 90, 120, 150, 180, 240]):
+        runquery = self.db.cursor()
+        if len(tickers) == 0:
+            tickers = self.mysql.get_tickers_id()
         for ticker in tickers:
-            self.ema(self,ticker)
+            for day in emadays:
+                runquery.callproc("p_ema", tuple([ticker, day]))
+                self.db.commit()
+                print("Completed EMA for ", ticker, day)
 
-    def rsi(self):
-        tickers = self.mysql.get_tickers_id()
+    def rsi(self, tickers=[], days=[7, 14, 21]):
+        runquery = self.db.cursor()
+        if not tickers:
+            tickers = self.mysql.get_tickers_id()
         for ticker in tickers:
-            self.rsi(self,ticker)
+            for day in days:
+                runquery.callproc("p_rsi", tuple([ticker, day]))
+                self.db.commit()
+                print("Completed RSI for ", ticker, day)
 
-    def kdj(self):
-        tickers = self.mysql.get_tickers_id()
+    def kdj(self, tickers=[], days=[5,6,9,18,19,34,36,45,55,73,89]):
+        runquery = self.db.cursor()
+        if not tickers:
+            tickers = self.mysql.get_tickers_id()
+
         for ticker in tickers:
-            self.kdj(self,ticker)
+            for day in days:
+                runquery.callproc("p_kdj", tuple([ticker, day, 3]))
+                self.db.commit()
+                print("Completed KDJ for ", ticker, day)
 
     def bollinger(self):
         return
 
-    def ema(self, ticker):
-        emadays = [3, 5, 7, 10, 12, 14, 15, 16, 20, 25, 26, 30, 40, 50, 70, 90, 120, 150, 180, 240]
-        for day in emadays:
-            self.ema(ticker,day)
-
-    def ema(self, ticker, day):
-        runquery = self.db.cursor()
-        runquery.execute("p_ema", [ticker, day])
-
-    def rsi(self, ticker):
-        self.rsi (ticker, 7)
-        self.rsi (ticker, 14)
-        self.rsi (ticker, 21)
-
-
-    def rsi(self, ticker, day):
-        runquery = self.db.cursor()
-        runquery.execute("p_rsi", [ticker, day])
-
-    def kdj(self, ticker):
-        days = [5,6,9,18,19,34,36,45,55,73,89]
-        for day in days:
-            self.kdj(ticker, day)
-
-
-    def kdj(self, ticker, day):
-        runquery = self.db.cursor()
-        runquery.execute("p_rsi", [ticker, day, 3])
 

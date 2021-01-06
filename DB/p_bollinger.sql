@@ -1,6 +1,6 @@
 DELIMITER $$
 DROP PROCEDURE IF EXISTS p_bollinger$$
-CREATE PROCEDURE `p_bollinger`( _code varchar(10), _days int, _emplify decimal(10,2), _start datetime)
+CREATE PROCEDURE `p_bollinger`( _code varchar(10), _days int, _amplify decimal(10,2), _start datetime)
 BEGIN
     DECLARE _startid int;
     DECLARE _endid int;
@@ -17,8 +17,8 @@ BEGIN
 	IF _days = null THEN
 		SET _days = 10;
     END IF;
-	IF _emplify = null THEN
-		SET _emplify = 2;
+	IF _amplify = null THEN
+		SET _amplify = 2;
     END IF;
 
     SELECT count(*) INTO _cnt FROM ema WHERE code = _code AND days = _days;
@@ -39,8 +39,9 @@ call p_log(_prog, _Method, CONCAT('Get _startid and _endid: ' , cast(_startid as
     CREATE TEMPORARY TABLE IF NOT EXISTS _bollinger
     (`code` varchar(20) NOT NULL,
 	  `dayid` int NOT NULL,
+      `date` datetime NOT NULL,
 	  `days` int NOT NULL,
-	  `emplify` double NOT NULL,
+	  `amplify` double NOT NULL,
       `deviation` double NULL,
       `closeprice` double NULL,
 	  `ema` double DEFAULT '0',
@@ -55,14 +56,15 @@ call p_log(_prog, _Method, CONCAT('Get _startid and _endid: ' , cast(_startid as
         INSERT INTO _bollinger
 		SELECT 	D.code,
 			D.dayid,
+            D.date,
 			_days as days,
-            _emplify as Emplify,
+            _amplify as amplify,
 			_dev as Deviation,
 			D.closeprice,
 			E.ema,
             E.dema,
-			E.ema + _dev * _emplify  as upper,
-			E.ema - _dev * _emplify  as lower
+			E.ema + _dev * _amplify  as upper,
+			E.ema - _dev * _amplify  as lower
 		FROM dayprice D, ema E
 		WHERE D.code = _code and E.code = _code
 			AND D.dayId = E.dayId AND E.days = _days
@@ -74,6 +76,7 @@ call p_log(_prog, _Method, CONCAT('Get _startid and _endid: ' , cast(_startid as
     END WHILE;
 
     SELECT * FROM _bollinger;
+
 
 END$$
 DELIMITER ;
