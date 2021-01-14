@@ -59,7 +59,7 @@ def monitor():
 #get_new()
 #get_hour()
 # get_min()
-get_2min()
-#get_realtime()
+# get_2min()
+get_realtime()
 
 #monitor()

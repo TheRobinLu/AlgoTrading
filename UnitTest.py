@@ -1,5 +1,9 @@
 import yfinance as yf
 from datetime import datetime as dt
+import datetime
+import pytz
+import time
+from dateutil import tz
 
 
 def downloadmin():
@@ -30,7 +34,25 @@ def checkListEmpty():
         print('I am null')
 
 def strToDate():
-    a = '2020-12-14 00:00:00'
+    a = dt.now().strftime("%Y-%m-%d")
+    print(a)
+
+def DateTimetoDate():
+    a = dt.now()
+    b = a.replace(hour=0, minute=0, second=0, microsecond=0) # Returns a copy
+    c = b + datetime.timedelta(minutes=15)
+    print(b, type(b))
+    print(c, type(c))
+
+def timeZone():
+    d = dt.now()
+    print(d)
+    # timezone = pytz.timezone(-5)
+    a = d.astimezone(tz = tz.tzlocal())
+    print(a)
+
+    print(tz.tzlocal())
+
 
 def replace():
     a = 'Peter is a {0} dog, but {1}'
@@ -43,8 +65,10 @@ def replace():
 
 #downloadmin()
 #checkListEmpty()
-replace()
-
+#replace()
+#strToDate()
+#DateTimetoDate()
+timeZone()
 
 
 

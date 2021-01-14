@@ -55,7 +55,7 @@ class TradeData:
                 i = i+1
 
             # 3 days ema
-            self.calculateIndicators(tickerid)
+ #           self.calculateIndicators(tickerid)
         return
 
     def get_new(self, tickers):
@@ -110,7 +110,7 @@ class TradeData:
                 i = i+1
                 print("Importing ", tickerid, i, " of ", cnt)
             # ema
-            self.calculateIndicators(tickerid)
+#            self.calculateIndicators(tickerid)
 
         return
 
@@ -266,8 +266,8 @@ class TradeData:
         runquery = self.db.cursor()
         query = ''
 
-        if start < dt.now() + relativedelta(days=-7):
-            start = dt.now() + relativedelta(days=-7)
+        if start < dt.now() + relativedelta(days=-4):
+            start = dt.now() + relativedelta(days=-4)
 
         if len(tickers) == 0:
             tickers = self.get_tickers()
@@ -323,24 +323,6 @@ class TradeData:
         for a in data:
             tickers.append(''.join(a))
         return tickers
-
-    def calculateIndicators(self, ticker):
-        emadays = [3,5,7,10,12,14,15,16,20,25,26,30,40,50,70,90,120,150,180,240]
-        runquery = self.db.cursor()
-        for day in emadays:
-            runquery.callproc('p_ema', [ticker, day])
-            print("Calculate EMA ", ticker, day)
-
-        return
-
-    def calculateRSI(self, ticker):
-        emadays = [3,5,7,10,12,14,15,16,20,25,26,30,40,50,70,90,120,150,180,240]
-        runquery = self.db.cursor()
-        for day in emadays:
-            runquery.callproc('p_ema', [ticker, day])
-            print("Calculate EMA ", ticker, day)
-
-        return
 
     def cleanupall(self, ticker):
         runquery = self.db.cursor()

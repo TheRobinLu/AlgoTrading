@@ -8,15 +8,16 @@ from dateutil.relativedelta import *
 
 myTd = td.TradeData()
 myTd.get_new('')
-
-myTd.get_2min('', dt.now() + relativedelta(days=-2), dt.now())
-
-myTd.get_min('', dt.now() + relativedelta(days=-7), dt.now())
-
-# # calculate indicator
+# #
+# myTd.get_2min('', dt.now() + relativedelta(days=-3), dt.now())
+#
+# myTd.get_min('', dt.now() + relativedelta(days=-2), dt.now())
+# # myTd.get_min(['WPRT.TO','XQQ.TO', 'XSP.TO', 'Z'], dt.now() + relativedelta(days=-2), dt.now())
+# #,
+# # # calculate indicator
 # MyInd = ind.Indicator()
 # MyInd.ema()
 # MyInd.kdj()
-# MyInd.rsi()
-
-# run 5:00pm every day
+# MyInd.rsi(tickers=[])
+#
+# # run 5:00pm every day

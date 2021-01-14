@@ -24,7 +24,7 @@ BEGIN
 		SET _period = 9;
     END IF;        
 
-	DELETE FROM FROM KDJ WHERE code = _code and days = _days and period = _period AND J is null;
+	DELETE FROM KDJ WHERE code = _code and days = _days and period = _period AND J is null;
 
 	SELECT  Max(dayId) into _maxdayId
 	FROM KDJ WHERE code = _code and days = _days and period = _period;
