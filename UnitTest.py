@@ -4,6 +4,7 @@ import datetime
 import pytz
 import time
 from dateutil import tz
+from collections import namedtuple
 
 
 def downloadmin():
@@ -60,6 +61,22 @@ def replace():
     t = tuple(l)
     print(a.format(t))
 
+
+def nameTuple():
+    a = ['','','']
+    # a.append("ARKW")
+    # a.append(dt.fromisoformat('2020-12-21'))
+    #a.append(26.76)
+    b = namedtuple("DayTrade", "Ticker Date Price")
+    c = b(233,33,44)
+    # b = namedtuple("DayTrade", ["Ticker", "Date", "Price"])
+    # c = b("ARKW", dt.fromisoformat('2020-12-21'), 26.76)
+
+    print(c)
+    print(*a)
+    print(b)
+
+
 #def download_new():
 
 
@@ -68,7 +85,8 @@ def replace():
 #replace()
 #strToDate()
 #DateTimetoDate()
-timeZone()
+#timeZone()
+nameTuple()
 
 
 

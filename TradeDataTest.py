@@ -28,7 +28,8 @@ def createIndicator():
 
 def get_new():
     myTd = td.TradeData()
-    myTd.get_new('')
+    tickers = ['EARK.NE', 'EAAI.NE']
+    myTd.get_new(tickers)
 
 def get_hour():
     myTd = td.TradeData()
@@ -56,10 +57,10 @@ def monitor():
 
 #download_all()
 #createIndicator()
-#get_new()
+get_new()
 #get_hour()
 # get_min()
 # get_2min()
-get_realtime()
+#get_realtime()
 
 #monitor()

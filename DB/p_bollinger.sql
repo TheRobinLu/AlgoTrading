@@ -69,7 +69,8 @@ call p_log(_prog, _Method, CONCAT('Get _startid and _endid: ' , cast(_startid as
 		WHERE D.code = _code and E.code = _code
 			AND D.dayId = E.dayId AND E.days = _days
 			and D.dayid = E.Dayid
-            AND D.dayid = _cursorid;
+            AND D.dayid = _cursorid
+            AND E.dema is not null;
 
         SET _cursorid = _cursorid + 1;
 

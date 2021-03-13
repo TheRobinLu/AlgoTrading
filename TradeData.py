@@ -3,6 +3,7 @@ import MySql as sql
 import pandas as pd
 import numpy as np
 from datetime import datetime as dt
+import datetime
 from dateutil.relativedelta import *
 import math
 import time
@@ -94,6 +95,9 @@ class TradeData:
                     if math.isnan(value):
                         skip = 1
                         break
+                #if date <= lastDate:
+                #    skip = 1
+
                 if skip == 1:
                     continue
                 query = "INSERT INTO dayprice (code, dayId, date, openprice, highprice, lowprice, closeprice, adjclose, volume) "\
@@ -127,7 +131,7 @@ class TradeData:
             runquery.execute(query)
             data = runquery.fetchall()
             if data[0][0]==None:
-                lastDate = dt.strptime("2019-01-05", "%Y-%m-%d")
+                lastDate = dt.now() + datetime.timedelta(days=-729)
                 lastdayid = 0
                 data = yf.download(ticker, interval="1h", start=lastDate, group_by="ticker")
                 #, start=lastDate
@@ -135,13 +139,15 @@ class TradeData:
             else:
                 lastDate = data[0][0]
                 lastdayid = data[0][1]
-                data = yf.download(ticker, start=lastDate)
+                data = yf.download(ticker, interval="1h", start=lastDate, group_by="ticker")
 
-            if len(data) > 0:
+            if len(data) > 0 and lastdayid > 0:
                 self.cleanuplast(tickerid, lastdayid)
 
             cnt = len(data)
             i = lastdayid
+            before = dt.now()
+            seq = 0
             for date, market in data.iterrows():
                 skip = 0
                 for value in market:
@@ -153,6 +159,13 @@ class TradeData:
                 query = "INSERT INTO dayprice (code, dayId, date, openprice, highprice, lowprice, closeprice, adjclose, volume) "\
                         "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 #insert all
+                if date == before:
+                    seq = seq + 1
+                else:
+                    before = date
+                    seq = 0
+                date = self.sethour(date, seq)
+
                 row = []
                 row.append(tickerid)
                 row.append(i)
@@ -340,6 +353,7 @@ class TradeData:
 
     def cleanuplast(self, ticker, dayid):
         runquery = self.db.cursor()
+
         query = "DELETE FROM dayprice WHERE code = %s AND dayid >= %s"
         runquery.execute(query, [ticker, dayid])
         query = "DELETE FROM ema WHERE code = %s AND dayid >= %s"
@@ -358,4 +372,12 @@ class TradeData:
         runquery.execute(query, [ticker])
 
         return str(runquery.fetchone()[0])
+
+    def sethour(self, date, seq):
+        today = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
+        date = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        seconds = 95 * 360
+        hour = date + datetime.timedelta(seconds=seconds + seq * 3600)
+        return hour
+
 
