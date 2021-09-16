@@ -82,7 +82,8 @@ class BackTestBollinger(backtest.BackTest):
 
     def getTradeInfor(self, parameter, start, end):
         runquery = self.db.cursor()
-        runquery.callproc("p_bollinger_trend", tuple([self.ticker, parameter.emadays, parameter.trend, parameter.short, start, end]))
+        runquery.callproc("p_bollinger_trend", tuple([self.ticker, parameter.emadays, parameter.trend, parameter.short,
+                                                      start, end]))
         for result in runquery.stored_results():
             self.TradeData = result.fetchall()
 

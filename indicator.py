@@ -29,8 +29,9 @@ class Indicator:
                 runquery.callproc("p_rsi", tuple([ticker, day]))
                 self.db.commit()
                 print("Completed RSI for ", ticker, day)
+        print(dt.now(), "Completed RSI")
 
-    def kdj(self, tickers=[], days=[5,6,9,18,19,34,36,45,55,73,89]):
+    def kdj(self, tickers=[], days=[6,9,18,34,55,89]):
         runquery = self.db.cursor()
         if not tickers:
             tickers = self.mysql.get_tickers_id()
@@ -40,8 +41,34 @@ class Indicator:
                 runquery.callproc("p_kdj", tuple([ticker, day, 3]))
                 self.db.commit()
                 print("Completed KDJ for ", ticker, day)
+        print( dt.now(), "Completed KDJ")
 
     def bollinger(self):
         return
 
+    def demark9Point(self, tickers=[]):
+        runquery = self.db.cursor()
+        if not tickers:
+            tickers = self.mysql.get_tickers_id()
+
+        for ticker in tickers:
+            runquery.callproc("p_demark9", tuple([ticker]))
+            self.db.commit()
+            print("Completed demark9 for ", ticker)
+
+        print( dt.now(), "Completed demark9")
+
+    def KDJDaysInRange(self):
+        runquery = self.db.cursor()
+        runquery.callproc("p_set_all_kdj_daysInRange", tuple([0]))
+        self.db.commit()
+        print(dt.now() , "Completed p_set_all_kdj_daysInRange. ")
+
+
+    def RSIDaysInRange(self):
+        runquery = self.db.cursor()
+        runquery.callproc("p_set_all_RSI_daysInRange", tuple([0]))
+        self.db.commit()
+
+        print(dt.now() , "Completed p_set_all_RSI_daysInRange. ")
 

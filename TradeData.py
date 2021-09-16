@@ -275,7 +275,7 @@ class TradeData:
 
         return
 
-    def get_realtime(self,tickers, start):
+    def get_realtime(self, tickers, start):
         runquery = self.db.cursor()
         query = ''
 
