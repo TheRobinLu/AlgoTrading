@@ -10,7 +10,7 @@ class Indicator:
         self.mysql = sql.MySql()
         self.db = self.mysql.dbconn()
 
-    def ema(self, tickers=[], emadays=[3, 5, 7, 10, 12, 14, 15, 16, 20, 25, 26, 30, 40, 50, 70, 90, 120, 150, 180, 240]):
+    def ema(self, tickers=[], emadays=[3, 5, 7, 10, 12, 14, 15, 20, 25,  30, 40, 50, 70, 90, 120, 150, 180]):
         runquery = self.db.cursor()
         if len(tickers) == 0:
             tickers = self.mysql.get_tickers_id()
@@ -66,6 +66,8 @@ class Indicator:
 
 
     def RSIDaysInRange(self):
+        #get Ticke
+
         runquery = self.db.cursor()
         runquery.callproc("p_set_all_RSI_daysInRange", tuple([0]))
         self.db.commit()

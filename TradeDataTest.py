@@ -23,7 +23,7 @@ def download_all():
 def createIndicator():
     myTd = td.TradeData()
 
-    myTd.calculateIndicators('ARKK')
+    myTd.calculateIndicators('')
 
 
 def get_new():
@@ -33,7 +33,7 @@ def get_new():
 
 def get_hour():
     myTd = td.TradeData()
-    tickers = ['EMA.TO']
+    tickers = ['EAAI.NE']
     myTd.get_hour(tickers)
 
 def get_min():
@@ -57,8 +57,8 @@ def monitor():
 
 #download_all()
 #createIndicator()
-get_new()
-#get_hour()
+#get_new()
+get_hour()
 # get_min()
 # get_2min()
 #get_realtime()

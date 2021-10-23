@@ -5,6 +5,7 @@ import pytz
 import time
 from dateutil import tz
 from collections import namedtuple
+import TradeData
 
 
 def downloadmin():
@@ -76,6 +77,7 @@ def nameTuple():
     print(*a)
     print(b)
 
+#def download_hour():
 
 #def download_new():
 
@@ -86,7 +88,7 @@ def nameTuple():
 #strToDate()
 #DateTimetoDate()
 #timeZone()
-nameTuple()
+#nameTuple()
 
 
 
