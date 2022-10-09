@@ -1,4 +1,6 @@
 import yfinance as yf
+from MySQLdb import IntegrityError
+
 import MySql as sql
 import pandas as pd
 import numpy as np
@@ -299,7 +301,11 @@ class TradeData:
                     a = str(time)
                     row.append(a)
                     row = row + market.to_list()
-                    runquery.execute(query, tuple(row))
+                    try:
+                        runquery.execute(query, tuple(row))
+                    except IntegrityError as err:
+                        print('get a error')
+                        pass
 
                     print("Importing 2mins ", tickerid, " for ", a)
                     self.db.commit()

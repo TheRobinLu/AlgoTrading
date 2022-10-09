@@ -74,3 +74,18 @@ class Indicator:
 
         print(dt.now() , "Completed p_set_all_RSI_daysInRange. ")
 
+    def Obv(self, tickers=[]):
+        runquery = self.db.cursor()
+        if not tickers:
+            tickers = self.mysql.get_tickers_id()
+
+        for ticker in tickers:
+            runquery.callproc("p_obv", tuple([ticker]))
+            self.db.commit()
+            print("Completed obv for ", ticker)
+
+        print( dt.now(), "Completed obv")
+
+
+# myInd = Indicator()
+# myInd.Obv(myInd.mysql.get_tickers_id())

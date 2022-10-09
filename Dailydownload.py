@@ -8,7 +8,7 @@ from dateutil.relativedelta import *
 # download data from yahoo daily data, 1min, 2min
 
 myTd = td.TradeData()
-
+#
 myTd.get_new('')
 # #
 myTd.get_2min('', dt.now() + relativedelta(days=-5), dt.now())
@@ -25,5 +25,7 @@ MyInd.demark9Point()
 MyInd.KDJDaysInRange()
 
 MyInd.RSIDaysInRange()
+
+MyInd.Obv()
 
 
