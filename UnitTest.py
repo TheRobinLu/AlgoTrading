@@ -77,9 +77,9 @@ def nameTuple():
     print(*a)
     print(b)
 
-def obv():
+#def obv():
 
-#def download_hour():
+##def download_hour():
 
 #def download_new():
 

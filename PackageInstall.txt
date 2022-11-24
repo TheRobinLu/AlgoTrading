@@ -1,5 +1,5 @@
 ## fix/upgrade pip
-easy_install pip
+## easy_install pip
 
 ##install yahoo finance
 pip install yfinance

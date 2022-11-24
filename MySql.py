@@ -8,7 +8,7 @@ class MySql:
         self.db = conn.connect(
             host='localhost',
             user='root',
-            password='1234',
+            password='TToomm7&',
             database='stock'
         )
 
@@ -16,7 +16,7 @@ class MySql:
         return conn.connect(
             host='localhost',
             user='root',
-            password='1234',
+            password='TToomm7&',
             database='stock'
         )
 

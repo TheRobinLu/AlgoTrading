@@ -3,7 +3,7 @@ import mysql.connector as conn
 db = conn.connect(
     host='localhost',
     user='root',
-    password='1234',
+    password='TToomm7&',
     database='stock'
 )
 
@@ -29,3 +29,5 @@ def SelectProc():
     mycursor = db.cursor()
     sql = "SELECT FROM p_bollinger()"
 
+
+DBquery()
